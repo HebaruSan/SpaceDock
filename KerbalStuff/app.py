@@ -15,6 +15,7 @@ from flask import Flask, render_template, g, url_for, Response, request
 from flask_login import LoginManager, current_user
 from flaskext.markdown import Markdown
 from werkzeug.exceptions import HTTPException
+import werkzeug.wrappers
 
 from .blueprints.accounts import accounts
 from .blueprints.admin import admin
@@ -75,7 +76,7 @@ if not app.debug:
     # *then* converts it to a 500 if it couldn't find any. So we can't just listen for 500s, they aren't 500s yet.
     # https://flask.palletsprojects.com/en/1.1.x/errorhandling/#unhandled-exceptions
     @app.errorhandler(Exception)
-    def handle_generic_exception(e: Exception) -> Any:
+    def handle_generic_exception(e: Exception) -> Union[Tuple[str, int], Response, werkzeug.wrappers.Response]:
         # shit
         try:
             db.rollback()
@@ -107,14 +108,14 @@ if not app.debug:
 
 
 @app.errorhandler(404)
-def handle_404(e: Exception) -> Any:
+def handle_404(e: Exception) -> Union[Tuple[str, int], Response, werkzeug.wrappers.Response]:
     path = request.path
     if path.startswith('/api/'):
         return handle_api_exception(e)
     return render_template("not_found.html"), 404
 
 
-def handle_api_exception(e: Exception) -> Response:
+def handle_api_exception(e: Exception) -> Union[Response, werkzeug.wrappers.Response]:
     if isinstance(e, HTTPException):
         # start with the correct headers and status code from the error
         response = e.get_response()
