@@ -317,5 +317,5 @@ def get_all_announcement_posts() -> List[BlogPost]:
 
 def get_non_member_announcement_posts() -> List[BlogPost]:
     return BlogPost.query.filter(
-        BlogPost.announcement, BlogPost.members_only.isnot(True)
+        BlogPost.announcement, BlogPost.members_only != True
     ).order_by(desc(BlogPost.created)).all()

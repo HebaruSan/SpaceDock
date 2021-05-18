@@ -27,21 +27,10 @@ class op:
                    column: sa.Column) -> None: ...
 
     @classmethod
-    def drop_column(cls,
+    def alter_column(cls,
                     table_name: str,
-                    column: str) -> None: ...
-
-    @classmethod
-    def create_index(cls,
-                     index_name: str,
-                     table_name: str,
-                     columns: List[str],
-                     unique: Optional[bool] = False) -> None: ...
-
-    @classmethod
-    def drop_index(cls,
-                   index_name: str,
-                   table_name: Optional[str] = None) -> None: ...
+                    column_name: str,
+                    nullable: Optional[bool] = None) -> None: ...
 
     @classmethod
     def create_foreign_key(cls,
@@ -50,9 +39,30 @@ class op:
                            referent_table: str,
                            local_cols: List[str],
                            remote_cols: List[str]) -> None: ...
+    @classmethod
+    def create_index(cls,
+                     index_name: str,
+                     table_name: str,
+                     columns: List[str],
+                     unique: Optional[bool] = False) -> None: ...
+
+
+    @classmethod
+    def drop_column(cls,
+                    table_name: str,
+                    column: str) -> None: ...
 
     @classmethod
     def drop_constraint(cls,
                         constraint_name: str,
                         table_name: str,
                         type_: Optional[str] = None) -> None: ...
+
+    @classmethod
+    def drop_index(cls,
+                   index_name: str,
+                   table_name: Optional[str] = None) -> None: ...
+
+    @classmethod
+    def execute(cls,
+                sqltext: str) -> None: ...

@@ -14,7 +14,7 @@ blog = Blueprint('blog', __name__, template_folder='../../templates/blog')
 def index() -> str:
     posts = (BlogPost.query.order_by(BlogPost.created.desc()).all()
              if current_user
-             else BlogPost.query.filter(BlogPost.members_only.isnot(True)).order_by(BlogPost.created.desc()).all())
+             else BlogPost.query.filter(BlogPost.members_only != True).order_by(BlogPost.created.desc()).all())
     return render_template("blog_index.html", posts=posts)
 
 
